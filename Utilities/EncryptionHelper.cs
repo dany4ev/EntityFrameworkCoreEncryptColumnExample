@@ -4,7 +4,7 @@ namespace Utilities
 {
     public static class EncryptionHelper
     {
-        private static readonly string EncryptionKey = GenerateRandomKey(256);
+        public static readonly string EncryptionKey = GenerateRandomKey(256);
 
         public static (string EncryptedText, string EncryptionKey) Encrypt(string plainText)
         {

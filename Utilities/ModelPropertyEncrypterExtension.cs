@@ -10,6 +10,7 @@ public static class ModelPropertyEncrypterExtension
         // Instantiate the EncryptionConverter
         ICryptographyService cryptographyService = new ReverseCryptographyService();
         var converter = new EncryptedConverter(cryptographyService);
+        var encryptionKey = cryptographyService.EncryptionKey;
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
