@@ -1,0 +1,70 @@
+﻿@using Utilities
+@model IEnumerable<User>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p class="text-right">
+	@Html.ActionLink("Create New", "Create")
+</p>
+
+@if (ViewBag.Message != null)
+{
+
+	<p class="alert alert-success" role="alert">
+		@ViewBag.Message
+	</p>
+}
+
+
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.FirstName)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.LastName)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.EmailAddress)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.IdentityNumber)
+		</th>
+		<th></th>
+	</tr>
+
+
+	@if (Model != null && Model.Count() > 0)
+	{
+		foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.FirstName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.LastName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.EmailAddress)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.IdentityNumber)
+				</td>
+				<td>
+					@Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+					@Html.ActionLink("Details", "Detail", new { id = item.ID}) |
+					@Html.ActionLink("Delete", "Delete", new { id = item.ID})
+				</td>
+			</tr>
+		}
+	}
+	else
+	{
+		<td colspan="4" class="text-center"><b>No Data Available . Please Add Data By CLick On Create Button</b></td>
+	}
+</table>

@@ -1,0 +1,45 @@
+using Microsoft.EntityFrameworkCore;
+using Utilities;
+
+namespace EntityFrameworkCoreEncryptColumnExample.Models
+{
+    public class ExampleDbContext : DbContext
+    {
+        public ExampleDbContext(
+            DbContextOptions<ExampleDbContext> dbContextOptions
+            //, ICryptographyService cryptographyService
+            ) : base(dbContextOptions)
+        {
+            var databaseFactory = new DatabaseFactory();
+            ConnectionString = databaseFactory.GetConnectionStringByDatabase(DatabaseType.Postgres);
+            //_cryptographyService = cryptographyService;
+        }
+
+        private readonly string ConnectionString = string.Empty;
+        //private readonly ICryptographyService _cryptographyService;
+
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<EncryptionConfiguration> EncryptionConfigurations { get; set; }
+
+        /// <summary>
+        /// Call Postgres function to retrieve all user records
+        /// Note that we need some other way to decrypt the records returned from this method
+        /// The EncryptedConverter does not work for the mapped field results returned from database this way
+        /// </summary>
+        /// <returns></returns>
+        public List<User> GetUsers() =>
+            [.. Database.SqlQueryRaw<User>("select * from GET_ALL_USERS()")];
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+            optionsBuilder.UseNpgsql(ConnectionString);
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.HasDefaultSchema("encryptexample");
+            //modelBuilder.ApplyConfiguration(new UserConfiguration(_cryptographyService));
+            modelBuilder.UseEncryption();
+        }
+    }
+}
