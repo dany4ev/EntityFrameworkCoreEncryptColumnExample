@@ -3,15 +3,31 @@ using Utilities;
 
 namespace EntityFrameworkCoreEncryptColumnExample.Controllers
 {
-    public class UserController(ExampleDbContext dbContext) : Controller
+    public class UserController : Controller
     {
-        private readonly ExampleDbContext _dbContext = dbContext;
+        private ReverseCryptographyService _cryptographyService;
+        private readonly ExampleDbContext _dbContext;
+        private readonly string _encryptionKey = string.Empty;
+
+        public UserController(ExampleDbContext dbContext)
+        {
+            _dbContext = dbContext;
+            _encryptionKey = EncryptionHelper.GenerateRandomKey(256);
+            _cryptographyService = new ReverseCryptographyService(_encryptionKey);
+        }
 
         // GET: UserController
         public ActionResult Index()
         {
-            var usersViaEF = _dbContext.Users.ToList();
             //var usersViaSPFunction = _dbContext.GetUsers();
+            var usersViaEF = _dbContext.Users.ToList();
+
+            foreach (var user in usersViaEF)
+            {
+                _cryptographyService = new ReverseCryptographyService(user.EncryptionKey);
+                user.EmailAddress = _cryptographyService.Decrypt(user.EmailAddress);
+                user.IdentityNumber = _cryptographyService.Decrypt(user.IdentityNumber);
+            }
 
             return View(usersViaEF);
         }
@@ -40,8 +56,9 @@ namespace EntityFrameworkCoreEncryptColumnExample.Controllers
                 {
                     FirstName = collection[keys[0]]!,
                     LastName = collection[keys[1]]!,
-                    EmailAddress = collection[keys[2]]!,
-                    IdentityNumber = collection[keys[3]]!
+                    EmailAddress = _cryptographyService.Encrypt(collection[keys[2]]!),
+                    IdentityNumber = _cryptographyService.Encrypt(collection[keys[3]]!),
+                    EncryptionKey = _encryptionKey
                 };
                 _dbContext.Users.Add(user);
                 _dbContext.SaveChanges();

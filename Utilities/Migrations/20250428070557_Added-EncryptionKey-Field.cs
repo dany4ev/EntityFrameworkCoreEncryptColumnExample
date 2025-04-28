@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EntityFrameworkCoreEncryptColumnExample.Migrations
+namespace Utilities.Migrations
 {
     /// <inheritdoc />
-    public partial class initialize : Migration
+    public partial class AddedEncryptionKeyField : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,15 +19,16 @@ namespace EntityFrameworkCoreEncryptColumnExample.Migrations
                 schema: "encryptexample",
                 columns: table => new
                 {
-                    ID = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    ID = table.Column<Guid>(type: "uuid", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
                     EmailAddress = table.Column<string>(type: "text", nullable: false),
-                    IdentityNumber = table.Column<string>(type: "text", nullable: false)
+                    IdentityNumber = table.Column<string>(type: "text", nullable: false),
+                    EncryptionKey = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User_Id", x => x.ID);
+                    table.PrimaryKey("PK_Users", x => x.ID);
                 });
         }
 

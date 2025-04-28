@@ -4,8 +4,8 @@ namespace Utilities;
 
 public class EncryptedConverter(ICryptographyService cryptographyService, ConverterMappingHints? mappingHints = null) 
     : ValueConverter<string, string>(
-        content => cryptographyService.Encrypt(content), 
-        content => cryptographyService.Decrypt(content), 
+        v => cryptographyService.Encrypt(v), 
+        v => cryptographyService.Decrypt(v), 
         mappingHints)
 {
 }

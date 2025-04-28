@@ -1,16 +1,18 @@
 namespace Utilities;
 
-public record User
+public class User
 {
     public Guid ID { get; set; }
     
-    public required string FirstName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
     
-    public required string LastName { get; set; }
-    
-    [Encrypted]
-    public required string EmailAddress { get; set; }
-    
-    [Encrypted]
-    public required string IdentityNumber { get; set; }
+    public string LastName { get; set; } = string.Empty;
+
+    //[Encrypted]
+    public string EmailAddress { get; set; } = string.Empty;
+
+    //[Encrypted]
+    public string IdentityNumber { get; set; } = string.Empty;
+
+    public string EncryptionKey { get; set; } = string.Empty;
 }

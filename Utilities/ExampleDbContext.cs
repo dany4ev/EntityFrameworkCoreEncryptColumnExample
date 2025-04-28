@@ -16,7 +16,6 @@ namespace Utilities
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<EncryptionConfiguration> EncryptionConfigurations { get; set; }
 
         /// <summary>
         /// Call Postgres function to retrieve all user records
@@ -24,8 +23,7 @@ namespace Utilities
         /// The EncryptedConverter does not work for the mapped field results returned from database this way
         /// </summary>
         /// <returns></returns>
-        public List<User> GetUsers() =>
-            [.. Database.SqlQueryRaw<User>("select * from GET_ALL_USERS()")];
+        public List<User> GetUsers() => [.. Database.SqlQueryRaw<User>("select * from GET_ALL_USERS()")];
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseNpgsql(ConnectionString);
@@ -34,9 +32,7 @@ namespace Utilities
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("encryptexample");
-
-            string encryptionKey = EncryptionHelper.GenerateRandomKey(256); // Create a random encryption key and save it for the values being saved in database
-            modelBuilder.UseEncryption(encryptionKey, this);
+            //modelBuilder.UseEncryption();
         }
     }
 }
