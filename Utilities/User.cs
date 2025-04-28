@@ -1,6 +1,4 @@
-using Utilities;
-
-namespace EntityFrameworkCoreEncryptColumnExample.Models;
+namespace Utilities;
 
 public record User
 {

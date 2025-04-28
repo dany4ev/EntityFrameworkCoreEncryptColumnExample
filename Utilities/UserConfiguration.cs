@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Utilities;
 
-namespace EntityFrameworkCoreEncryptColumnExample.Models;
+namespace Utilities;
 
 public class UserConfiguration(ICryptographyService cryptographyService) : IEntityTypeConfiguration<User>
 {

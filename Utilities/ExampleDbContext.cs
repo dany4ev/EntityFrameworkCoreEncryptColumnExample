@@ -1,22 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using Utilities;
 
-namespace EntityFrameworkCoreEncryptColumnExample.Models
+namespace Utilities
 {
     public class ExampleDbContext : DbContext
     {
         public ExampleDbContext(
             DbContextOptions<ExampleDbContext> dbContextOptions
-            //, ICryptographyService cryptographyService
             ) : base(dbContextOptions)
         {
             var databaseFactory = new DatabaseFactory();
             ConnectionString = databaseFactory.GetConnectionStringByDatabase(DatabaseType.Postgres);
-            //_cryptographyService = cryptographyService;
         }
 
         private readonly string ConnectionString = string.Empty;
-        //private readonly ICryptographyService _cryptographyService;
 
         public DbSet<User> Users { get; set; }
 
@@ -38,10 +34,9 @@ namespace EntityFrameworkCoreEncryptColumnExample.Models
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("encryptexample");
-            //modelBuilder.ApplyConfiguration(new UserConfiguration(_cryptographyService));
 
             string encryptionKey = EncryptionHelper.GenerateRandomKey(256); // Create a random encryption key and save it for the values being saved in database
-            modelBuilder.UseEncryption(encryptionKey);
+            modelBuilder.UseEncryption(encryptionKey, this);
         }
     }
 }

@@ -1,4 +1,3 @@
-using EntityFrameworkCoreEncryptColumnExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Utilities;
 
@@ -12,7 +11,6 @@ namespace EntityFrameworkCoreEncryptColumnExample
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddSingleton<ICryptographyService, ReverseCryptographyService>();
             builder.Services.AddScoped<IDatabaseFactory, DatabaseFactory>();
 
             var databaseFactory = new DatabaseFactory();

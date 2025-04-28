@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EntityFrameworkCoreEncryptColumnExample.Models;
+namespace Utilities;
 
 public record EncryptionConfiguration
 {

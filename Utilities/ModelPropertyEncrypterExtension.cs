@@ -5,17 +5,25 @@ namespace Utilities;
 
 public static class ModelPropertyEncrypterExtension
 {
-    public static void UseEncryption(this ModelBuilder modelBuilder, string encryptionKey)
+    private static void SaveEncryptionKey(string encryptionKey, ExampleDbContext dbContext)
     {
+        dbContext.EncryptionConfigurations.Add(new EncryptionConfiguration { EncryptedPassword = encryptionKey });
+        dbContext.SaveChanges();
+    }
+
+    public static void UseEncryption(this ModelBuilder modelBuilder, string encryptionKey, ExampleDbContext dbContext)
+    {
+        SaveEncryptionKey(encryptionKey, dbContext);
+
         // Instantiate the EncryptionConverter
-        ICryptographyService cryptographyService = new ReverseCryptographyService(encryptionKey);
+        var cryptographyService = new ReverseCryptographyService(encryptionKey);
         var converter = new EncryptedConverter(cryptographyService);
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             foreach (var property in entityType.GetProperties())
             {
-                if (property.ClrType == typeof(string) 
+                if (property.ClrType == typeof(string)
                     && !IsDiscriminator(property)
                     && property.PropertyInfo is not null)
                 {
