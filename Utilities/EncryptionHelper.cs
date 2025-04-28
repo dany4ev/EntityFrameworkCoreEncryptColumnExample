@@ -4,12 +4,10 @@ namespace Utilities
 {
     public static class EncryptionHelper
     {
-        public static readonly string EncryptionKey = GenerateRandomKey(256);
-
-        public static (string EncryptedText, string EncryptionKey) Encrypt(string plainText)
+        public static string Encrypt(string plainText, string encryptionKey)
         {
             using Aes aesAlg = Aes.Create();
-            aesAlg.Key = Convert.FromBase64String(EncryptionKey);
+            aesAlg.Key = Convert.FromBase64String(encryptionKey);
             aesAlg.IV = GenerateRandomIV(); // Generate a random IV for each encryption
 
             aesAlg.Padding = PaddingMode.PKCS7; // Set the padding mode to PKCS7
@@ -24,15 +22,15 @@ namespace Utilities
             }
 
             var encryptedText = Convert.ToBase64String(aesAlg.IV.Concat(msEncrypt.ToArray()).ToArray());
-            return (EncryptedText: encryptedText, EncryptionKey: EncryptionKey);
+            return encryptedText;
         }
 
-        public static (string DecryptedText, string EncryptionKey) Decrypt(string cipherText)
+        public static string Decrypt(string cipherText, string encryptionKey)
         {
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
 
             using Aes aesAlg = Aes.Create();
-            aesAlg.Key = Convert.FromBase64String(EncryptionKey);
+            aesAlg.Key = Convert.FromBase64String(encryptionKey);
             aesAlg.IV = [.. cipherBytes.Take(16)];
 
             aesAlg.Padding = PaddingMode.PKCS7; // Set the padding mode to PKCS7
@@ -43,7 +41,7 @@ namespace Utilities
             using CryptoStream csDecrypt = new(msDecrypt, decryptor, CryptoStreamMode.Read);
             using StreamReader srDecrypt = new(csDecrypt);
             var decryptedText = srDecrypt.ReadToEnd();
-            return (DecryptedText: decryptedText, EncryptionKey: EncryptionKey);
+            return decryptedText;
         }
 
         private static byte[] GenerateRandomIV()
@@ -53,7 +51,7 @@ namespace Utilities
             return aesAlg.IV;
         }
 
-        private static string GenerateRandomKey(int keySizeInBits)
+        public static string GenerateRandomKey(int keySizeInBits)
         {
             // Convert the key size to bytes
             int keySizeInBytes = keySizeInBits / 8;

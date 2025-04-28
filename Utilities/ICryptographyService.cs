@@ -2,8 +2,7 @@
 {
     public interface ICryptographyService
     {
-        public string EncryptionKey { get; set; }
-        public (string DecryptedText, string EncryptionKey) Decrypt(string data);
-        public (string EncryptedText, string EncryptionKey) Encrypt(string data);
+        public string Decrypt(string data);
+        public string Encrypt(string data);
     }
 }

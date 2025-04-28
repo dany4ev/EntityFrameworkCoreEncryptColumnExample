@@ -1,21 +1,19 @@
 ﻿namespace Utilities
 {
-    public class ReverseCryptographyService : ICryptographyService
+    public class ReverseCryptographyService(string encryptionKey) : ICryptographyService
     {
-        public string EncryptionKey { get; set; } = string.Empty;
+        private readonly string EncryptionKey = encryptionKey;
 
-        public (string EncryptedText, string EncryptionKey) Encrypt(string data)
+        public string Encrypt(string data)
         {
-            (string EncryptedText, string EncryptionKey) result = EncryptionHelper.Encrypt(data);
-            EncryptionKey = result.EncryptionKey;
-            return result;
+            string EncryptedText = EncryptionHelper.Encrypt(data, EncryptionKey);
+            return EncryptedText;
         }
 
-        public (string DecryptedText, string EncryptionKey) Decrypt(string data)
+        public string Decrypt(string data)
         {
-            (string DecryptedText, string EncryptionKey) result = EncryptionHelper.Decrypt(data);
-            EncryptionKey = result.EncryptionKey;
-            return result;
+            string DecryptedText = EncryptionHelper.Decrypt(data, EncryptionKey);
+            return DecryptedText;
         }
     }
 }

@@ -39,7 +39,9 @@ namespace EntityFrameworkCoreEncryptColumnExample.Models
             base.OnModelCreating(modelBuilder);
             modelBuilder.HasDefaultSchema("encryptexample");
             //modelBuilder.ApplyConfiguration(new UserConfiguration(_cryptographyService));
-            modelBuilder.UseEncryption();
+
+            string encryptionKey = EncryptionHelper.GenerateRandomKey(256); // Create a random encryption key and save it for the values being saved in database
+            modelBuilder.UseEncryption(encryptionKey);
         }
     }
 }

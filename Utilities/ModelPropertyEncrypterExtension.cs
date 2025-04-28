@@ -5,12 +5,11 @@ namespace Utilities;
 
 public static class ModelPropertyEncrypterExtension
 {
-    public static void UseEncryption(this ModelBuilder modelBuilder)
+    public static void UseEncryption(this ModelBuilder modelBuilder, string encryptionKey)
     {
         // Instantiate the EncryptionConverter
-        ICryptographyService cryptographyService = new ReverseCryptographyService();
+        ICryptographyService cryptographyService = new ReverseCryptographyService(encryptionKey);
         var converter = new EncryptedConverter(cryptographyService);
-        var encryptionKey = cryptographyService.EncryptionKey;
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
