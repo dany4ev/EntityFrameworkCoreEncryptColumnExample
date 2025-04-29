@@ -1,4 +1,5 @@
-﻿using Utilities;
+﻿using System.Diagnostics;
+using Utilities;
 
 namespace EFCoreEncryptionExampleConsole
 {
@@ -10,11 +11,9 @@ namespace EFCoreEncryptionExampleConsole
             var key = "E546C8DF278CD5931069B522E695D4F2"; // EncryptionKey this can be generated randomnly using some tool or programmatically
 
             AddSeparator();
-
             EncryptionDecryptionExample1(content, key);
 
             AddSeparator();
-
             EncryptionDecryptionExample2(content);
 
             Console.ReadLine();
@@ -28,21 +27,45 @@ namespace EFCoreEncryptionExampleConsole
 
         private static void EncryptionDecryptionExample2(string content)
         {
-            ICryptographyService cryptographyService = new ReverseCryptographyService();
-            var encrypted = cryptographyService.Encrypt(content);
-            Console.WriteLine(encrypted);
+            var encryptionKey = EncryptionHelper.GenerateRandomKey(256);
+            ReverseCryptographyService cryptographyService = new(encryptionKey);
 
-            var decrypted = cryptographyService.Decrypt(encrypted);
-            Console.WriteLine(decrypted);
+            // Measure time for encryption
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+            string encryptedText = cryptographyService.Encrypt(content);
+            stopwatch.Stop();
+            Console.WriteLine($"Encryption Time: {stopwatch.ElapsedMilliseconds} ms");
+
+            // Measure time for decryption
+            stopwatch.Restart();
+            string decryptedText = cryptographyService.Decrypt(encryptedText);
+            stopwatch.Stop();
+            Console.WriteLine($"Decryption Time: {stopwatch.ElapsedMilliseconds} ms");
+
+            Console.WriteLine($"Original Text: {content}");
+            Console.WriteLine($"Encrypted Text: {encryptedText}");
+            Console.WriteLine($"Decrypted Text: {decryptedText}");
         }
 
         private static void EncryptionDecryptionExample1(string content, string key)
         {
-            var encrypted = EncryptionHelper.Encrypt(content, key);
-            Console.WriteLine(encrypted);
+            // Measure time for encryption
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+            string encryptedText = EncryptionHelper.Encrypt(content, key);
+            stopwatch.Stop();
+            Console.WriteLine($"Encryption Time: {stopwatch.ElapsedMilliseconds} ms");
 
-            var decrypted = EncryptionHelper.Decrypt(encrypted, key);
-            Console.WriteLine(decrypted);
+            // Measure time for decryption
+            stopwatch.Restart();
+            string decryptedText = EncryptionHelper.Decrypt(encryptedText, key);
+            stopwatch.Stop();
+            Console.WriteLine($"Decryption Time: {stopwatch.ElapsedMilliseconds} ms");
+
+            Console.WriteLine($"Original Text: {content}");
+            Console.WriteLine($"Encrypted Text: {encryptedText}");
+            Console.WriteLine($"Decrypted Text: {decryptedText}");
         }
     }
 }
